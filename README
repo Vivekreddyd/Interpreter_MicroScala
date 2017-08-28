@@ -1,0 +1,13 @@
+Steps to run the code:
+
+1)Execute the command inside the directory of uploaded assignment 
+	
+	java SCALAInt < <SCALA program file>
+	
+	Example:
+	java SCALAInt < Tests/Test1.scala
+		
+3) Test the other test cases present in the "Tests" folder using the same command as above with different test files.
+
+Note: Output of the all commands is captured into TestScript.out file.
+	

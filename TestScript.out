@@ -1,0 +1,438 @@
+vg0174@cse01:~/PL/assignments/assignment7$ ls
+Category.class        Environment.class   Interpreter.class  Parser.java      SCALAInt.java     SyntaxTree.class  Token.class
+Category.java         Environment.java    Interpreter.java   Procedure.class  scala.jflex       SyntaxTree.java   TokenClass.class
+DenotableValue.class  ErrorMessage.class  Parser$1.class     Procedure.java   SCALALexer.class  Tests             TokenClass.java
+DenotableValue.java   ErrorMessage.java   Parser.class       SCALAInt.class   SCALALexer.java   Token$1.class     Token.java
+vg0174@cse01:~/PL/assignments/assignment7$ java SCALAInt < Tests/Test1.scala
+Source Program
+--------------
+
+// Test1.scala
+
+// Compute quotient and remainder by repeated subtraction.
+
+object Test1
+{
+  def main (args : Array [String]) {
+    var q : Int = 0;
+    var r : Int = 0;
+    var x : Int = 0;
+    var y : Int = 0;
+    x = 32; y = 5;
+    r = x;
+    while (r >= y)
+    {
+      q = q + 1;
+      r = r - y;
+    }
+    println (q);
+    println (r);
+  }
+}
+Identifier Table for total program
+----------------------------------
+
+Id   Category
+--   --------
+main Function
+
+Syntax Tree for main
+--------------------
+(: (: (: (: (: (= (id x) (intValue 32)) (= (id y) (intValue 5))) (= (id r) (id x))) (WHILE (>= (id r) (id y)) (: (= (id q) (+ (id q) (intValue 1))) (= (id r) (- (id r) (id y)))))) (println (id q))) (println (id r)))
+
+Identifier Table for main
+-------------------------
+
+Id Category
+-- --------
+q  Int (0)
+r  Int (0)
+x  Int (0)
+y  Int (0)
+
+
+Output of the interpreter is :
+6
+2
+
+=================================================================================================================================================================
+
+vg0174@cse01:~/PL/assignments/assignment7$ java SCALAInt < Tests/Test2.scala
+Source Program
+--------------
+
+// Test2.scala
+
+// List manipulatioon operators.
+
+object Test2
+{
+  def main (args : Array [String]) {
+    var my_list : List [Int] = Nil;
+    var my_list_tl : List [Int] = Nil;
+    var r : Int = 0;
+    var h : Int = 0;
+    r = 2;
+    while (r < 5)
+    {
+      my_list = r :: my_list;
+      r = r + 1;
+    }
+    h = my_list . head;
+    my_list_tl = my_list . tail;
+    println (h);
+    println (my_list_tl . head);
+  }
+}
+Identifier Table for total program
+----------------------------------
+
+Id   Category
+--   --------
+main Function
+
+Syntax Tree for main
+--------------------
+(: (: (: (: (: (= (id r) (intValue 2)) (WHILE (< (id r) (intValue 5)) (: (= (id my_list) (:: (id r) (id my_list))) (= (id r) (+ (id r) (intValue 1)))))) (= (id h) (head (id my_list)))) (= (id my_list_tl) (tail (id my_list)))) (println (id h))) (println (head (id my_list_tl))))
+
+Identifier Table for main
+-------------------------
+
+Id         Category
+--         --------
+h          Int (0)
+my_list    List ([])
+my_list_tl List ([])
+r          Int (0)
+
+
+Output of the interpreter is :
+4
+3
+
+=================================================================================================================================================================
+
+vg0174@cse01:~/PL/assignments/assignment7$ java SCALAInt < Tests/Test3.scala
+Source Program
+--------------
+
+// Test3.scala
+
+// Non-recursive function.
+
+object Test3
+{
+  var h : Int = 0;  // global variable
+
+  def area (x : Int, y : Int) : Int =
+  {
+     var z : Int = 0;
+     z = 2 * (x * y + (x * h) + y * h);
+     return z;
+  }
+
+  def main (args : Array [String]) {
+    var a : Int = 0;
+    var b : Int = 0;
+    var s : Int = 0;
+    a = 3; b = 4;
+    h = 5;
+    s = area (a, b);
+    println (s);
+  }
+}
+Identifier Table for total program
+----------------------------------
+
+Id   Category
+--   --------
+area Function
+h    Int (0)
+main Function
+
+Syntax Tree for area
+--------------------
+(: (= (id z) (* (intValue 2) (+ (+ (* (id x) (id y)) (* (id x) (id h))) (* (id y) (id h))))) (return (id z)))
+
+Identifier Table for area
+-------------------------
+
+Id Category
+-- --------
+z  Int (0)
+
+Syntax Tree for main
+--------------------
+(: (: (: (: (= (id a) (intValue 3)) (= (id b) (intValue 4))) (= (id h) (intValue 5))) (= (id s) (apply area [ ,(id a) ,(id b) ]))) (println (id s)))
+
+Identifier Table for main
+-------------------------
+
+Id Category
+-- --------
+a  Int (0)
+b  Int (0)
+s  Int (0)
+
+
+Output of the interpreter is :
+94
+
+=================================================================================================================================================================
+
+vg0174@cse01:~/PL/assignments/assignment7$ java SCALAInt < Tests/Test4.scala
+Source Program
+--------------
+
+// Test4.scala
+
+// Recursive factorial function.
+
+object Test4
+{
+  def facto (x : Int) : Int =
+  {
+    var s : Int = 0;
+    if (x == 1)
+      s = 1;
+    else
+      s = x * facto (x - 1);
+    return s;
+  }
+
+  def main (args : Array [String])
+  {
+    var i : Int = 0;
+    var fac : Int = 0;
+    i = 4;
+    fac = facto (i);
+    println (fac);
+  }
+}
+Identifier Table for total program
+----------------------------------
+
+Id    Category
+--    --------
+facto Function
+main  Function
+
+Syntax Tree for facto
+---------------------
+(: (if (== (id x) (intValue 1)) (= (id s) (intValue 1)) (= (id s) (* (id x) (apply facto [ ,(- (id x) (intValue 1)) ])))) (return (id s)))
+
+Identifier Table for facto
+--------------------------
+
+Id Category
+-- --------
+s  Int (0)
+
+Syntax Tree for main
+--------------------
+(: (: (= (id i) (intValue 4)) (= (id fac) (apply facto [ ,(id i) ]))) (println (id fac)))
+
+Identifier Table for main
+-------------------------
+
+Id  Category
+--  --------
+fac Int (0)
+i   Int (0)
+
+
+Output of the interpreter is :
+24
+
+=================================================================================================================================================================
+
+vg0174@cse01:~/PL/assignments/assignment7$ java SCALAInt < Tests/Test5.scala
+Source Program
+--------------
+
+// Test5.scala
+
+// A simple recursive function on lists.
+
+object Test5 {
+
+  var my_list : List [Int] = Nil;
+
+  def cons_my_list (r : Int) : List [Int] =
+  {
+    if (r <= 10) {
+      my_list = r :: my_list;
+      my_list = cons_my_list (r + 1);
+    }
+    return my_list;
+  }
+
+  def main (args : Array [String])
+  {
+    var r : Int = 0;
+    r = 1;
+    my_list = Nil;
+    my_list = cons_my_list (r);
+    println (my_list . head);
+  }
+
+}
+Identifier Table for total program
+----------------------------------
+
+Id           Category
+--           --------
+cons_my_list Function
+main         Function
+my_list      List ([])
+
+Syntax Tree for cons_my_list
+----------------------------
+(: (if (<= (id r) (intValue 10)) (: (= (id my_list) (:: (id r) (id my_list))) (= (id my_list) (apply cons_my_list [ ,(+ (id r) (intValue 1)) ])))) (return (id my_list)))
+
+Identifier Table for cons_my_list
+---------------------------------
+
+Id Category
+-- --------
+
+Syntax Tree for main
+--------------------
+(: (: (: (= (id r) (intValue 1)) (= (id my_list) Nil)) (= (id my_list) (apply cons_my_list [ ,(id r) ]))) (println (head (id my_list))))
+
+Identifier Table for main
+-------------------------
+
+Id Category
+-- --------
+r  Int (0)
+
+
+Output of the interpreter is :
+10
+
+=================================================================================================================================================================
+
+vg0174@cse01:~/PL/assignments/assignment7$ java SCALAInt < Tests/Test6.scala
+Source Program
+--------------
+
+// Test6.scala
+
+// Two recursive functions operating on lists.
+
+object Test6 {
+
+  def cons_a_list (r : Int, l : List [Int]) : List [Int] =
+  {
+    var my_list : List [Int] = Nil;
+    if (r != 0) {
+      my_list = r :: my_list;
+      my_list = cons_a_list (r - 1, my_list);
+    }
+    return my_list;
+  }
+
+  def equal (list1 : List [Int], list2 : List [Int]) : Int =
+  {
+    var l1 : List [Int] = Nil;
+    var l2 : List [Int] = Nil;
+    var my_flag : Int = 0;
+    l1 = list1; l2 = list2;
+    while (!l1 . isEmpty && !l2 . isEmpty && my_flag == 0) {
+      if (l1 . head != l2 . head)
+        my_flag=1;
+      else {
+        l1 = l1 . tail;
+        l2 = l2 . tail;
+        my_flag = equal (l1, l2);
+      }
+    }
+    if (l1 . isEmpty && l2 . isEmpty)
+      my_flag = 0;
+    else
+      my_flag = 1;
+    return my_flag;
+  }
+
+  def main (args : Array [String])
+  {
+    var r : Int = 0;
+    var h : Int = 0;
+    var l1 : List [Int] = Nil;
+    var l2 : List [Int] = Nil;
+    var l3 : List [Int] = Nil;
+    var my_list : List [Int] = Nil;
+    r = 10;
+    l1 = cons_a_list (r, my_list);
+    l2 = cons_a_list (r, my_list);
+    r = r - 1;
+    l3 = cons_a_list (r, my_list);
+    if (equal (l1, l2) == 0)
+      h = 1;
+    else
+      h = 0;
+    if (equal (l1, l3) != 0)
+      r = 1;
+    else
+      r = 0;
+    println (h);
+    println (r);
+  }
+
+}
+Identifier Table for total program
+----------------------------------
+
+Id          Category
+--          --------
+cons_a_list Function
+equal       Function
+main        Function
+
+Syntax Tree for cons_a_list
+---------------------------
+(: (if (!= (id r) (intValue 0)) (: (= (id my_list) (:: (id r) (id my_list))) (= (id my_list) (apply cons_a_list [ ,(- (id r) (intValue 1)) ,(id my_list) ])))) (return (id my_list)))
+
+Identifier Table for cons_a_list
+--------------------------------
+
+Id      Category
+--      --------
+my_list List ([])
+
+Syntax Tree for equal
+---------------------
+(: (: (: (: (= (id l1) (id list1)) (= (id l2) (id list2))) (WHILE (&& (&& (! (isEmpty (id l1))) (! (isEmpty (id l2)))) (== (id my_flag) (intValue 0))) (if (!= (head (id l1)) (head (id l2))) (= (id my_flag) (intValue 1)) (: (: (= (id l1) (tail (id l1))) (= (id l2) (tail (id l2)))) (= (id my_flag) (apply equal [ ,(id l1) ,(id l2) ])))))) (if (&& (isEmpty (id l1)) (isEmpty (id l2))) (= (id my_flag) (intValue 0)) (= (id my_flag) (intValue 1)))) (return (id my_flag)))
+
+Identifier Table for equal
+--------------------------
+
+Id      Category
+--      --------
+l1      List ([])
+l2      List ([])
+my_flag Int (0)
+
+Syntax Tree for main
+--------------------
+(: (: (: (: (: (: (: (: (= (id r) (intValue 10)) (= (id l1) (apply cons_a_list [ ,(id r) ,(id my_list) ]))) (= (id l2) (apply cons_a_list [ ,(id r) ,(id my_list) ]))) (= (id r) (- (id r) (intValue 1)))) (= (id l3) (apply cons_a_list [ ,(id r) ,(id my_list) ]))) (if (== (apply equal [ ,(id l1) ,(id l2) ]) (intValue 0)) (= (id h) (intValue 1)) (= (id h) (intValue 0)))) (if (!= (apply equal [ ,(id l1) ,(id l3) ]) (intValue 0)) (= (id r) (intValue 1)) (= (id r) (intValue 0)))) (println (id h))) (println (id r)))
+
+Identifier Table for main
+-------------------------
+
+Id      Category
+--      --------
+h       Int (0)
+l1      List ([])
+l2      List ([])
+l3      List ([])
+my_list List ([])
+r       Int (0)
+
+
+Output of the interpreter is :
+1
+0
+
+=================================================================================================================================================================
